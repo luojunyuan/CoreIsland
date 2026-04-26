@@ -1,0 +1,25 @@
+﻿// ---- Application ----
+GetMessage
+TranslateMessage
+DispatchMessage
+
+// ---- Window ----
+GetModuleHandle
+RegisterClassEx
+WNDPROC
+CreateWindowEx
+CW_USEDEFAULT
+ShowWindow
+UpdateWindow
+
+// ---- Window Procedure ----
+WM_*
+CREATESTRUCTW
+SetWindowLongPtr
+GetWindowLongPtr
+DefWindowProc
+PostQuitMessage
+SIZE_MINIMIZED
+GetClientRect
+SetWindowPos
+SendMessage

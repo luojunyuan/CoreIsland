@@ -5,20 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseUwp>true</UseUwp>
+    <UseUwpTools>false</UseUwpTools>
     <Platforms>x64;ARM64</Platforms>
-    <DefaultLanguage>zh-CN</DefaultLanguage>
     <IsAotCompatible>true</IsAotCompatible>
     <CsWin32RunAsBuildTask>true</CsWin32RunAsBuildTask>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <EnableMsixTooling>true</EnableMsixTooling>
-
-    <!--
-      This is a non-XAML app (just a simple CoreApplication app), so the XAML compiler is not needed.
-      Disabling this property fixes that, and also removes the Windows SDK check for the 26100 SDK.
-      Not importing the XAML compiler removes some unnecessary declared project capabilities. Note:
-      this property should not be disabled if custom PRI resources are needed by the application.      
-    -->
-    <EnableXamlCompilerTargetsForUwpApps>false</EnableXamlCompilerTargetsForUwpApps>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.275">

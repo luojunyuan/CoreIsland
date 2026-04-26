@@ -36,6 +36,10 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
+	</ItemGroup>
+
   <!-- CoreIsland 框架扩展 -->
   <Import Project="..\..\CoreIsland\CoreIsland.XamlPatch.targets" />
   <!-- CoreIsland 框架提供的 XBF 嵌入 PRI 方案 -->

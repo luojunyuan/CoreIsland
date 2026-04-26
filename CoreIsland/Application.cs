@@ -26,22 +26,6 @@ public partial class Application : Windows.UI.Xaml.Application
     public void Initialize()
     {
         s_xamlManager = WindowsXamlManager.InitializeForCurrentThread();
-
-        //Utils.MuxResources.Apply();
-
-        string xaml =
-        """
-            <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-            	<ResourceDictionary.MergedDictionaries>
-            		<XamlControlsResources ControlsResourcesVersion="Version2" xmlns="using:Microsoft.UI.Xaml.Controls" />
-            	</ResourceDictionary.MergedDictionaries>
-            </ResourceDictionary>
-            
-            """;
-        var rd = (ResourceDictionary)XamlReader.Load(xaml);
-        this.Resources.MergedDictionaries.Add(rd);
-        Debug.WriteLine(rd.MergedDictionaries.First().Source.AbsoluteUri);
     }
 
     public int Run()

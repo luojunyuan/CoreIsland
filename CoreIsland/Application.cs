@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml.Hosting;
+﻿using System.Diagnostics;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Markup;
 using Windows.Win32;
 using Windows.Win32.UI.WindowsAndMessaging;
 
@@ -8,9 +11,37 @@ public partial class Application : Windows.UI.Xaml.Application
 {
     private static WindowsXamlManager? s_xamlManager;
 
+    /// <summary>MUX metadata provider — injected into generated XamlTypeInfo as a fallback.</summary>
+    private readonly static IXamlMetadataProvider s_muxProvider = Utils.MuxResources.CreateMuxMetadataProvider();
+
+    public static IXamlType? MuxResolveType(string fullName) =>
+        s_muxProvider.GetXamlType(fullName);
+
+    public static IXamlType? MuxResolveType(Type type) =>
+        s_muxProvider.GetXamlType(type);
+
+    public static XmlnsDefinition[] MuxGetXmlnsDefinitions() =>
+        s_muxProvider.GetXmlnsDefinitions() ?? [];
+
     public void Initialize()
     {
         s_xamlManager = WindowsXamlManager.InitializeForCurrentThread();
+
+        //Utils.MuxResources.Apply();
+
+        string xaml =
+        """
+            <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+            	<ResourceDictionary.MergedDictionaries>
+            		<XamlControlsResources ControlsResourcesVersion="Version2" xmlns="using:Microsoft.UI.Xaml.Controls" />
+            	</ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+            
+            """;
+        var rd = (ResourceDictionary)XamlReader.Load(xaml);
+        this.Resources.MergedDictionaries.Add(rd);
+        Debug.WriteLine(rd.MergedDictionaries.First().Source.AbsoluteUri);
     }
 
     public int Run()

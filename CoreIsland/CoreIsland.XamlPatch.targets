@@ -1,0 +1,10 @@
+<Project>
+  <!-- Patch generated XamlTypeInfo.g.cs: inject MUX fallback into
+       GetXamlTypeByName/GetXamlTypeByType/GetXmlnsDefinitions. -->
+  <Target Name="CoreIsland_PatchXamlTypeInfo"
+          AfterTargets="XamlMarkupCompilePass1"
+          BeforeTargets="CoreCompile"
+          Condition="'$(AppxPackage)' != 'true'">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Utils\Patch-XamlTypeInfo.ps1&quot; -FilePath &quot;$(IntermediateOutputPath)XamlTypeInfo.g.cs&quot;" />
+  </Target>
+</Project>

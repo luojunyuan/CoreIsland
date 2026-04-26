@@ -1,0 +1,68 @@
+﻿<Project>
+  <!--
+    CoreIsland WinUI 2.8.7 integration (non-packaged XAML Islands).
+    Extracts the native Microsoft.UI.Xaml.dll + resources.pri from the
+    NuGet .appx, merges the Fusion manifest so WinRT activation works,
+    and copies everything to the consuming WinExe's output directory.
+  -->
+
+  <!-- Extract payload and merge manifest (runs BEFORE compilation) -->
+  <Target Name="CoreIsland_PrepareMux"
+          BeforeTargets="PrepareResources;CoreCompile"
+          Condition="'$(AppxPackage)' != 'true' And '$(OutputType)' == 'WinExe'"
+          Inputs="$(MSBuildThisFileDirectory)Utils\app.manifest;$(PkgMicrosoft_UI_Xaml)\tools\AppX\$(MuxArch)\Release\Microsoft.UI.Xaml.2.8.appx"
+          Outputs="$(IntermediateOutputPath)mux\app.merged.manifest">
+    <Error Condition="'$(MuxArch)' == ''" Text="CoreIsland.Mux: Unsupported Platform '$(Platform)'. Expected x64 or ARM64." />
+    <MakeDir Directories="$(IntermediateOutputPath)mux" />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Utils\Prepare-Mux.ps1&quot; -MuxPackageDir &quot;$(PkgMicrosoft_UI_Xaml)&quot; -Architecture $(MuxArch) -AppManifest &quot;$(MSBuildThisFileDirectory)Utils\app.manifest&quot; -OutDir &quot;$(IntermediateOutputPath)mux&quot;" />
+  </Target>
+
+  <!-- Point the Winexe's manifest to the merged one -->
+  <Target Name="CoreIsland_SetMuxManifest"
+          DependsOnTargets="CoreIsland_PrepareMux"
+          BeforeTargets="CoreCompile;GenerateApplicationManifest"
+          Condition="'$(AppxPackage)' != 'true' And '$(OutputType)' == 'WinExe'">
+    <PropertyGroup>
+      <ApplicationManifest>$(IntermediateOutputPath)mux\app.merged.manifest</ApplicationManifest>
+      <Win32Manifest>$(IntermediateOutputPath)mux\app.merged.manifest</Win32Manifest>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Copy MUX runtime payload next to the built exe -->
+  <!--<Target Name="CoreIsland_CopyMuxPayload"
+          AfterTargets="Build"
+          Condition="'$(AppxPackage)' != 'true' And '$(OutputType)' == 'WinExe'">
+    <Copy SourceFiles="$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.pri" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>-->
+
+  <!-- Ship the MUX runtime payload next to the exe. Marked as None + CopyToOutputDirectory
+       because they are produced by PrepareMux and don't live in the source tree. -->
+  <ItemGroup>
+    <None Include="$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll">
+      <Link>Microsoft.UI.Xaml.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+    <None Include="$(IntermediateOutputPath)mux\resources.pri">
+      <Link>resources.pri</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+    <None Include="$(IntermediateOutputPath)mux\Microsoft.UI.Xaml\**\*.*">
+      <Link>Microsoft.UI.Xaml\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <!-- Patch the generated XamlTypeInfo.g.cs so GetXamlTypeByName/GetXamlTypeByType
+       fall back to CoreIsland.Application.MuxResolveType() when the built-in
+       lookup table doesn't contain MUX types. -->
+  <Target Name="CoreIsland_PatchXamlTypeInfo"
+          AfterTargets="XamlMarkupCompilePass1"
+          BeforeTargets="CoreCompile"
+          Condition="'$(AppxPackage)' != 'true' And '$(OutputType)' == 'WinExe'">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Utils\Patch-XamlTypeInfo.ps1&quot; -FilePath &quot;$(IntermediateOutputPath)XamlTypeInfo.g.cs&quot;" />
+  </Target>
+</Project>

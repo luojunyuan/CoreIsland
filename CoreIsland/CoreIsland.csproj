@@ -11,6 +11,7 @@
     <CsWin32RunAsBuildTask>true</CsWin32RunAsBuildTask>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.275">
@@ -19,9 +20,15 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- XBF 嵌入 PRI 方案：打包为 NuGet 时自动注入引用项目 -->
+  <!-- Build extensions: packed as NuGet content so consuming projects auto-import. -->
   <ItemGroup>
     <None Include="CoreIsland.XbfEmbed.props" PackagePath="build/$(MSBuildProjectName).props" Pack="true" />
     <None Include="CoreIsland.XbfEmbed.targets" PackagePath="build/$(MSBuildProjectName).targets" Pack="true" />
+    <None Include="CoreIsland.Mux.props" PackagePath="build/$(MSBuildProjectName).Mux.props" Pack="true" />
+    <None Include="CoreIsland.Mux.targets" PackagePath="build/$(MSBuildProjectName).Mux.targets" Pack="true" />
+    <None Include="Utils\Prepare-Mux.ps1" PackagePath="build/Utils\Prepare-Mux.ps1" Pack="true" />
+    <None Include="Utils\app.manifest" PackagePath="build/Utils\app.manifest" Pack="true" />
+    <None Include="Utils\COMInterop.cs" Pack="false" />
+    <None Include="Utils\MuxResources.cs" Pack="false" />
   </ItemGroup>
 </Project>

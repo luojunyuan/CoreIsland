@@ -64,14 +64,14 @@ public unsafe partial class Window
     private const string DefaultTitle = "CoreIsland";
 
     private readonly DesktopWindowXamlSource _xamlHost = new();
-    private readonly HWND _hwndDWXS;
-    private readonly HWND _islandHwnd;
     private readonly GCHandle _selfHandle;
+    private readonly HWND _coreHwnd;
+    private readonly HWND _xamlHwnd;
     private HWND _hwnd;
 
     public Window()
     {
-        CoreWindow.GetForCurrentThread().As<ICoreWindowInterop>().GetWindowHandle(out _hwndDWXS);
+        CoreWindow.GetForCurrentThread().As<ICoreWindowInterop>().GetWindowHandle(out _coreHwnd);
 
         _selfHandle = GCHandle.Alloc(this);
         var hwnd = PInvoke.CreateWindowEx(
@@ -93,21 +93,7 @@ public unsafe partial class Window
 
         var nativeSource = _xamlHost.As<IDesktopWindowXamlSourceNative2>();
         nativeSource.AttachToWindow(_hwnd);
-        nativeSource.GetWindowHandle(out _islandHwnd);
-
-        var border = new Windows.UI.Xaml.Controls.Border()
-        {
-            BorderBrush = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red),
-            BorderThickness = new Windows.UI.Xaml.Thickness(1),
-            Child = new Windows.UI.Xaml.Controls.TextBlock()
-            {
-                Text = "XAML Islands 已加载！",
-                HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Right,
-                VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Bottom,
-            }
-        };
-
-        _xamlHost.Content = border;
+        nativeSource.GetWindowHandle(out _xamlHwnd);
 
         EnableResizeLayoutSynchronization(_hwnd, true);
     }
@@ -132,10 +118,10 @@ public unsafe partial class Window
         {
             case PInvoke.WM_SIZE when wParam.Value != PInvoke.SIZE_MINIMIZED:
                 PInvoke.GetClientRect(_hwnd, out RECT cr);
-                PInvoke.SetWindowPos(_islandHwnd, default, cr.X, cr.Y, cr.Width, cr.Height,
+                PInvoke.SetWindowPos(_xamlHwnd, default, cr.X, cr.Y, cr.Width, cr.Height,
                     SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW);
 
-                PInvoke.SendMessage(_hwndDWXS, PInvoke.WM_SIZE, wParam, lParam);
+                PInvoke.SendMessage(_coreHwnd, PInvoke.WM_SIZE, wParam, lParam);
 
                 FrameworkAppPrivate.SetSynchronizationWindow(_hwnd);
                 return default;

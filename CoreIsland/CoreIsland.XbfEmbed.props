@@ -1,0 +1,10 @@
+﻿<Project>
+  <PropertyGroup>
+    <!-- 将 XBF 嵌入到 PRI 而不是作为松散文件 -->
+    <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
+    <XamlComponentResourceLocation>nested</XamlComponentResourceLocation>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <ProjectPriFileName>resources.pri</ProjectPriFileName>
+    <PriIndexName></PriIndexName>
+  </PropertyGroup>
+</Project>

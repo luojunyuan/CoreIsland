@@ -13,5 +13,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Text="XAML islands loaded!" />
+
+        <Button HorizontalAlignment="Right" Content="Click me!" />
     </Grid>
 </Page>

@@ -18,4 +18,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <!-- XBF 嵌入 PRI 方案：打包为 NuGet 时自动注入引用项目 -->
+  <ItemGroup>
+    <None Include="CoreIsland.XbfEmbed.props" PackagePath="build/$(MSBuildProjectName).props" Pack="true" />
+    <None Include="CoreIsland.XbfEmbed.targets" PackagePath="build/$(MSBuildProjectName).targets" Pack="true" />
+  </ItemGroup>
 </Project>

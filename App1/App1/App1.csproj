@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
@@ -20,4 +20,37 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CoreIsland\CoreIsland.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <!-- 将 XBF 嵌入到 PRI 而不是作为松散文件 -->
+    <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
+    <XamlComponentResourceLocation>nested</XamlComponentResourceLocation>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <ProjectPriFileName>resources.pri</ProjectPriFileName>
+    <PriIndexName></PriIndexName>
+  </PropertyGroup>
+  <!-- App.xbf 必须位于 PRI 资源树的根节点 -->
+  <Target Name="PlaceAppXbfAtRootOfResourceTree" AfterTargets="GetPackagingOutputs">
+    <ItemGroup>
+      <_RelocatedAppXamlData Include="@(PackagingOutputs)" Condition="'%(Filename)' == 'App' and ('%(Extension)' == '.xaml' or '%(Extension)' == '.xbf')" />
+      <PackagingOutputs Remove="@(_RelocatedAppXamlData)" />
+      <PackagingOutputs Include="@(_RelocatedAppXamlData)">
+        <TargetPath>%(Filename)%(Extension)</TargetPath>
+      </PackagingOutputs>
+    </ItemGroup>
+  </Target>
+  <!-- 将引用的 PRI 合并进 resources.pri -->
+  <Target Name="ComputeInputPriFiles" BeforeTargets="_GenerateProjectPriConfigurationFiles">
+    <ItemGroup>
+      <_PriFile Include="@(PackagingOutputs)" Condition="'%(Extension)' == '.pri' And '%(Filename)' != 'resources'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- AOT publish 时将 PRI 拷贝到发布目录 -->
+  <Target Name="IncludePriInPublish" AfterTargets="CopyNativeBinary">
+    <ItemGroup>
+      <_UwpPriFiles Include="$(OutputPath)*.pri" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_UwpPriFiles)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

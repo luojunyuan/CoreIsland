@@ -18,6 +18,13 @@
           Command="powershell -NoProfile -Command cp '$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll' '$(OutputPath)' -Force" />
   </Target>
 
+  <!-- Copy MUX DLL to PublishDir (AOT / dotnet publish) -->
+  <Target Name="CoreIsland_CopyMuxToPublish"
+          AfterTargets="CopyNativeBinary"
+          Condition="'$(AppxPackage)' != 'true' And Exists('$(OutputPath)Microsoft.UI.Xaml.dll')">
+    <Copy SourceFiles="$(OutputPath)Microsoft.UI.Xaml.dll" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+  </Target>
+
   <!-- Extract + merge PRI (runs BEFORE PRI generation) -->
   <Target Name="CoreIsland_MergeMuxPri"
           BeforeTargets="_GenerateProjectPriConfigurationFiles"

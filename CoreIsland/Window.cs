@@ -71,7 +71,8 @@ public unsafe partial class Window
 
     public Window()
     {
-        CoreWindow.GetForCurrentThread().As<ICoreWindowInterop>().GetWindowHandle(out _coreHwnd);
+        CoreWindow.GetForCurrentThread()
+            .HideWindowInWin10(out _coreHwnd);
 
         _selfHandle = GCHandle.Alloc(this);
         var hwnd = PInvoke.CreateWindowEx(

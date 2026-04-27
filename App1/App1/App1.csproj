@@ -15,13 +15,17 @@
 
   <PropertyGroup>
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-    <ApplicationManifest>app.merged.manifest</ApplicationManifest>
-    <Win32Manifest>app.merged.manifest</Win32Manifest>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\CoreIsland\CoreIsland.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <!--<PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />-->
+	  <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="Microsoft.UI.Xaml.dll">
@@ -35,11 +39,7 @@
 			<Visible>false</Visible>
 		</None>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
-	</ItemGroup>
-
+	
   <!-- CoreIsland 框架扩展 -->
   <Import Project="..\..\CoreIsland\CoreIsland.XamlPatch.targets" />
   <!-- CoreIsland 框架提供的 XBF 嵌入 PRI 方案 -->

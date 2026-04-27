@@ -12,16 +12,16 @@ public partial class Application : Windows.UI.Xaml.Application
     private static WindowsXamlManager? s_xamlManager;
 
     /// <summary>MUX metadata provider — injected into generated XamlTypeInfo as a fallback.</summary>
-    private readonly static IXamlMetadataProvider s_muxProvider = Utils.MuxResources.CreateMuxMetadataProvider();
+    public static IXamlMetadataProvider? s_muxProvider;
 
     public static IXamlType? MuxResolveType(string fullName) =>
-        s_muxProvider.GetXamlType(fullName);
+        s_muxProvider?.GetXamlType(fullName);
 
     public static IXamlType? MuxResolveType(Type type) =>
-        s_muxProvider.GetXamlType(type);
+        s_muxProvider?.GetXamlType(type);
 
     public static XmlnsDefinition[] MuxGetXmlnsDefinitions() =>
-        s_muxProvider.GetXmlnsDefinitions() ?? [];
+        s_muxProvider?.GetXmlnsDefinitions() ?? [];
 
     public void Initialize()
     {

@@ -13,6 +13,7 @@ namespace App1
 
         public App()
         {
+            s_muxProvider = new Microsoft.UI.Xaml.XamlTypeInfo.XamlControlsXamlMetaDataProvider();
             InitializeComponent();
         }
 

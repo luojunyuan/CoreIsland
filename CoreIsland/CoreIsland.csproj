@@ -29,6 +29,5 @@
     <None Include="Utils\Prepare-Mux.ps1" PackagePath="build/Utils\Prepare-Mux.ps1" Pack="true" />
     <None Include="Utils\app.manifest" PackagePath="build/Utils\app.manifest" Pack="true" />
     <None Include="Utils\COMInterop.cs" Pack="false" />
-    <None Include="Utils\MuxResources.cs" Pack="false" />
   </ItemGroup>
 </Project>

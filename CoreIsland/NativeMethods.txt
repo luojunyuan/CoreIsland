@@ -23,3 +23,7 @@ SIZE_MINIMIZED
 GetClientRect
 SetWindowPos
 SendMessage
+
+LoadLibrary
+WindowsCreateString
+RoGetActivationFactory

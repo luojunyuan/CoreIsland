@@ -1,0 +1,12 @@
+<Project>
+  <!--
+    CoreIsland: patch the generated App.g.i.cs to replace UWP Application.Start
+    with CoreIsland's XAML Islands initialization (app.Initialize() + app.Run()).
+  -->
+  <Target Name="CoreIsland_PatchAppMain"
+          AfterTargets="XamlMarkupCompilePass1"
+          BeforeTargets="CoreCompile"
+          Condition="'$(AppxPackage)' != 'true'">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Utils\Patch-AppMain.ps1&quot; -FilePath &quot;$(IntermediateOutputPath)App.g.i.cs&quot;" />
+  </Target>
+</Project>

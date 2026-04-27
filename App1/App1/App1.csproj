@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -30,4 +29,5 @@
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.targets" />
   <Import Project="..\..\CoreIsland\CoreIsland.Mux.props" />
   <Import Project="..\..\CoreIsland\CoreIsland.Mux.targets" />
+  <Import Project="..\..\CoreIsland\CoreIsland.AppMain.targets" />
 </Project>

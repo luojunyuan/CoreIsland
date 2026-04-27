@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Markup;
+﻿using Windows.UI.Xaml.Hosting;
 using Windows.Win32;
 using Windows.Win32.UI.WindowsAndMessaging;
 

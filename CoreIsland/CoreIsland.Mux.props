@@ -1,0 +1,3 @@
+<Project>
+  <!-- Intentionally empty: Mux.targets discovers the NuGet package via its known cache path. -->
+</Project>

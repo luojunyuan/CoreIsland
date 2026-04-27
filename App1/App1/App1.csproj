@@ -22,25 +22,13 @@
     <ProjectReference Include="..\..\CoreIsland\CoreIsland.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-	  <!--<PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />-->
-	  <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Include="Microsoft.UI.Xaml.dll">
-			<Link>Microsoft.UI.Xaml.dll</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
-		</None>
-		<None Include="resources.pri">
-			<Link>resources.pri</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
-		</None>
-	</ItemGroup>
-	
-  <!-- CoreIsland 框架提供的 XBF 嵌入 PRI 方案 -->
+  <!-- CoreIsland 框架扩展 -->
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.props" />
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.targets" />
+  <Import Project="..\..\CoreIsland\CoreIsland.Mux.props" />
+  <Import Project="..\..\CoreIsland\CoreIsland.Mux.targets" />
 </Project>

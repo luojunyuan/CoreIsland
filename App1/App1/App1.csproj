@@ -40,8 +40,6 @@
 		</None>
 	</ItemGroup>
 	
-  <!-- CoreIsland 框架扩展 -->
-  <Import Project="..\..\CoreIsland\CoreIsland.XamlPatch.targets" />
   <!-- CoreIsland 框架提供的 XBF 嵌入 PRI 方案 -->
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.props" />
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.targets" />

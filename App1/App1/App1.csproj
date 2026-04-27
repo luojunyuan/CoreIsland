@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
   </ItemGroup>
 
-  <!-- CoreIsland 框架扩展 -->
+  <!-- CoreIsland Extensions -->
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.props" />
   <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.targets" />
   <Import Project="..\..\CoreIsland\CoreIsland.Mux.props" />

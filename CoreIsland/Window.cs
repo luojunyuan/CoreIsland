@@ -26,8 +26,6 @@ public unsafe partial class Window
                 cbSize = (uint)sizeof(WNDCLASSEXW),
                 lpfnWndProc = s_wndProc,
                 hInstance = (HINSTANCE)s_hModule.DangerousGetHandle(),
-                //hCursor = PInvoke.LoadCursor(default, PInvoke.IDC_ARROW),
-                //hbrBackground = (HBRUSH)(IntPtr)(COLOR_WINDOW + 1),
                 lpszClassName = pClassName,
             };
 
@@ -76,7 +74,7 @@ public unsafe partial class Window
 
         _selfHandle = GCHandle.Alloc(this);
         var hwnd = PInvoke.CreateWindowEx(
-            dwExStyle: 0,
+            dwExStyle: WINDOW_EX_STYLE.WS_EX_NOREDIRECTIONBITMAP,
             lpClassName: ClassName,
             lpWindowName: DefaultTitle,
             dwStyle: WINDOW_STYLE.WS_OVERLAPPEDWINDOW,

@@ -25,6 +25,7 @@
     <None Include="CoreIsland.XbfEmbed.targets" PackagePath="build/$(MSBuildProjectName).targets" Pack="true" />
     <None Include="CoreIsland.Mux.targets" PackagePath="build/$(MSBuildProjectName).Mux.targets" Pack="true" />
     <None Include="Utils\Prepare-Mux.ps1" PackagePath="build/Utils\Prepare-Mux.ps1" Pack="true" />
+    <None Include="Utils\Trim-MuxPri.ps1" PackagePath="build/Utils\Trim-MuxPri.ps1" Pack="true" />
     <None Include="Utils\COMInterop.cs" Pack="false" />
   </ItemGroup>
 </Project>

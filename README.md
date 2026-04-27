@@ -17,7 +17,7 @@ msbuild .\App1\App1.csproj /t:Publish /p:PublishProfile=win-x64 /p:Platform=x64 
 4. Restore certain Windows 10 behaviors to match Windows 11
 
 ### TODO
-- [ ] reduce "Microsoft.UI.Xaml.pri" size
+- [x] reduce "Microsoft.UI.Xaml.pri" size
 - [ ] ExtendsContentIntoTitleBar
 - [ ] release nuget package
 

@@ -44,9 +44,15 @@
     <Exec Condition="'@(_MuxRef)' != '' And Exists('$(NuGetPackageRoot)microsoft.ui.xaml\') And !Exists('$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll')"
           Command="powershell -NoProfile -Command $tmp='$(IntermediateOutputPath)mux';$arch='$(_MuxArch)';$root='$(NuGetPackageRoot)microsoft.ui.xaml\';$dirs=@(dir $root -Directory -ea 0);if($dirs.Count -gt 0){$pkg=$dirs[$dirs.Count-1].FullName;$appx=dir &quot;$pkg\tools\AppX\$arch\Release\Microsoft.UI.Xaml.*.appx&quot; -ea 0;if($appx.Count -gt 0){$null=mkdir $tmp -Force;cp $appx[$appx.Count-1].FullName $tmp\mux.zip -Force;Expand-Archive -Force $tmp\mux.zip $tmp}}" />
 
+    <!-- Trim the PRI: strip obsolete XBF variants (compact, v1, rs2~rs5), keep only 19h1 and 21h1 -->
+    <Exec Condition="Exists('$(IntermediateOutputPath)mux\resources.pri') And !Exists('$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.pri')"
+          Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Utils\Trim-MuxPri.ps1&quot; -InputPri &quot;$(IntermediateOutputPath)mux\resources.pri&quot; -OutputPri &quot;$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.pri&quot;" />
+
     <ItemGroup>
+      <_PriFile Include="$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.pri"
+                Condition="Exists('$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.pri')" />
       <_PriFile Include="$(IntermediateOutputPath)mux\resources.pri"
-                Condition="Exists('$(IntermediateOutputPath)mux\resources.pri')" />
+                Condition="!Exists('$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.pri') And Exists('$(IntermediateOutputPath)mux\resources.pri')" />
     </ItemGroup>
   </Target>
 </Project>

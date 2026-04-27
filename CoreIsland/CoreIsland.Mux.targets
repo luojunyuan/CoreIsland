@@ -1,25 +1,45 @@
 ﻿<Project>
+  <!--
+    If the consuming project references Microsoft.UI.Xaml NuGet,
+    extract the native DLL + merge resources PRI into the app's own PRI.
+  -->
+
   <Target Name="CoreIsland_StageMuxRuntime"
-          BeforeTargets="AssignTargetPaths"
+          AfterTargets="Build"
           Condition="'$(AppxPackage)' != 'true'">
 
     <PropertyGroup>
       <_MuxArch Condition="'$(Platform)' == 'x64'">x64</_MuxArch>
       <_MuxArch Condition="'$(Platform)' == 'ARM64'">arm64</_MuxArch>
-      <_MuxAppx>$(NuGetPackageRoot)microsoft.ui.xaml\2.8.7\tools\AppX\$(_MuxArch)\Release\Microsoft.UI.Xaml.2.8.appx</_MuxAppx>
-      <_MuxExtractDir>$(IntermediateOutputPath)mux\</_MuxExtractDir>
     </PropertyGroup>
 
-    <!-- Extract once, then link to output -->
-    <Exec Condition="Exists('$(_MuxAppx)') And !Exists('$(_MuxExtractDir)Microsoft.UI.Xaml.dll')"
-          Command="powershell -NoProfile -Command $null=mkdir '$(_MuxExtractDir)' -Force;$appx='$(_MuxAppx)';cp $appx '$(_MuxExtractDir)mux.zip' -Force;Expand-Archive -Force '$(_MuxExtractDir)mux.zip' '$(_MuxExtractDir)'" />
+    <!-- Copy native DLL to output (projection.dll exists = package referenced) -->
+    <Exec Condition="'$(_MuxArch)' != '' And Exists('$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll') And !Exists('$(OutputPath)Microsoft.UI.Xaml.dll')"
+          Command="powershell -NoProfile -Command cp '$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll' '$(OutputPath)' -Force" />
+  </Target>
 
-    <ItemGroup Condition="Exists('$(_MuxExtractDir)Microsoft.UI.Xaml.dll')">
-      <None Include="$(_MuxExtractDir)Microsoft.UI.Xaml.dll" Link="Microsoft.UI.Xaml.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-      <None Include="$(_MuxExtractDir)resources.pri" Link="Microsoft.UI.Xaml.pri" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  <!-- Extract + merge PRI (runs BEFORE PRI generation) -->
+  <Target Name="CoreIsland_MergeMuxPri"
+          BeforeTargets="_GenerateProjectPriConfigurationFiles"
+          Condition="'$(AppxPackage)' != 'true'">
+
+    <PropertyGroup>
+      <_MuxArch Condition="'$(Platform)' == 'x64'">x64</_MuxArch>
+      <_MuxArch Condition="'$(Platform)' == 'ARM64'">arm64</_MuxArch>
+    </PropertyGroup>
+
+    <!-- Only proceed if Microsoft.UI.Xaml.Projection was resolved as a reference -->
+    <ItemGroup Condition="'$(_MuxArch)' != ''">
+      <_MuxRef Include="@(ResolvedCompileFileDefinitions)"
+               Condition="'%(Filename)' == 'Microsoft.UI.Xaml.Projection' And '%(Extension)' == '.dll'" />
     </ItemGroup>
 
-    <Warning Condition="!Exists('$(_MuxAppx)') And '$(OutputType)' == 'WinExe'"
-             Text="CoreIsland: Microsoft.UI.Xaml 2.8.7 NuGet package not found." />
+    <Exec Condition="'@(_MuxRef)' != '' And Exists('$(NuGetPackageRoot)microsoft.ui.xaml\') And !Exists('$(IntermediateOutputPath)mux\Microsoft.UI.Xaml.dll')"
+          Command="powershell -NoProfile -Command $tmp='$(IntermediateOutputPath)mux';$arch='$(_MuxArch)';$root='$(NuGetPackageRoot)microsoft.ui.xaml\';$dirs=@(dir $root -Directory -ea 0);if($dirs.Count -gt 0){$pkg=$dirs[$dirs.Count-1].FullName;$appx=dir &quot;$pkg\tools\AppX\$arch\Release\Microsoft.UI.Xaml.*.appx&quot; -ea 0;if($appx.Count -gt 0){$null=mkdir $tmp -Force;cp $appx[$appx.Count-1].FullName $tmp\mux.zip -Force;Expand-Archive -Force $tmp\mux.zip $tmp}}" />
+
+    <ItemGroup>
+      <_PriFile Include="$(IntermediateOutputPath)mux\resources.pri"
+                Condition="Exists('$(IntermediateOutputPath)mux\resources.pri')" />
+    </ItemGroup>
   </Target>
 </Project>

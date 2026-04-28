@@ -26,6 +26,6 @@
   </ItemGroup>
 
   <!-- CoreIsland Extensions -->
-  <Import Project="..\..\CoreIsland\CoreIsland.props" />
-  <Import Project="..\..\CoreIsland\CoreIsland.targets" />
+  <Import Project="..\..\CoreIsland\build\CoreIsland.props" />
+  <Import Project="..\..\CoreIsland\build\CoreIsland.targets" />
 </Project>

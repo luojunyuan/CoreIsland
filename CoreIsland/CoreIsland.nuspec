@@ -27,19 +27,19 @@
     <file src="..\README.md" target="README.md" />
 	  
     <!-- Auto-import wrappers (NuGet convention: build/{id}.props + build/{id}.targets) -->
-    <file src="CoreIsland.props" target="build\CoreIsland.props" />
-    <file src="CoreIsland.targets" target="build\CoreIsland.targets" />
+    <file src="build\CoreIsland.props" target="build\CoreIsland.props" />
+    <file src="build\CoreIsland.targets" target="build\CoreIsland.targets" />
 
     <!-- Feature files imported by the wrappers -->
-    <file src="CoreIsland.XbfEmbed.props" target="build\CoreIsland.XbfEmbed.props" />
-    <file src="CoreIsland.XbfEmbed.targets" target="build\CoreIsland.XbfEmbed.targets" />
-    <file src="CoreIsland.Mux.props" target="build\CoreIsland.Mux.props" />
-    <file src="CoreIsland.Mux.targets" target="build\CoreIsland.Mux.targets" />
-    <file src="CoreIsland.AppMain.targets" target="build\CoreIsland.AppMain.targets" />
+    <file src="build\CoreIsland.XbfEmbed.props" target="build\CoreIsland.XbfEmbed.props" />
+    <file src="build\CoreIsland.XbfEmbed.targets" target="build\CoreIsland.XbfEmbed.targets" />
+    <file src="build\CoreIsland.Mux.props" target="build\CoreIsland.Mux.props" />
+    <file src="build\CoreIsland.Mux.targets" target="build\CoreIsland.Mux.targets" />
+    <file src="build\CoreIsland.AppMain.targets" target="build\CoreIsland.AppMain.targets" />
 
     <!-- PowerShell helpers (called by MSBuild Exec tasks, not init scripts) -->
-    <file src="Utils\Prepare-Mux.ps1" target="build\Utils\Prepare-Mux.ps1" />
-    <file src="Utils\Trim-MuxPri.ps1" target="build\Utils\Trim-MuxPri.ps1" />
-    <file src="Utils\Patch-AppMain.ps1" target="build\Utils\Patch-AppMain.ps1" />
+    <file src="build\Utils\Prepare-Mux.ps1" target="build\Utils\Prepare-Mux.ps1" />
+    <file src="build\Utils\Trim-MuxPri.ps1" target="build\Utils\Trim-MuxPri.ps1" />
+    <file src="build\Utils\Patch-AppMain.ps1" target="build\Utils\Patch-AppMain.ps1" />
   </files>
 </package>

@@ -6,7 +6,7 @@ It replaces UWP's `Application.Start()` / runtime marshalling with a custom `App
 
 ```powershell
 # Build PublishAot
-msbuild .\App1\App1.csproj /t:Publish /p:PublishProfile=win-x64 /p:Platform=x64 /p:Configuration=Release
+msbuild .\App1\App1\App1.csproj /t:Publish /p:PublishProfile=win-x64 /p:Platform=x64 /p:Configuration=Release
 ```
 
 ### Features (what CoreIsland has done)
@@ -19,8 +19,8 @@ msbuild .\App1\App1.csproj /t:Publish /p:PublishProfile=win-x64 /p:Platform=x64 
 ### TODO
 - [x] reduce "Microsoft.UI.Xaml.pri" size
 - [ ] ExtendsContentIntoTitleBar
-- [ ] release nuget package
-- [ ] Distinguish packaged vs. unpackaged builds to avoid redundant Microsoft.UI.Xaml.dll extraction during packaging
+- [x] release nuget package
+- [ ] fix when PublishAot on msix packaged
 
 ### Looking for a C++ version?
 Also check [Blinue/Xaml-Islands-Cpp](https://github.com/Blinue/Xaml-Islands-Cpp); this project is inspired by it.

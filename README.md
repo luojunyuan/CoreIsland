@@ -20,6 +20,7 @@ msbuild .\App1\App1.csproj /t:Publish /p:PublishProfile=win-x64 /p:Platform=x64 
 - [x] reduce "Microsoft.UI.Xaml.pri" size
 - [ ] ExtendsContentIntoTitleBar
 - [ ] release nuget package
+- [ ] Distinguish packaged vs. unpackaged builds to avoid redundant Microsoft.UI.Xaml.dll extraction during packaging
 
 ### Looking for a C++ version?
 Also check [Blinue/Xaml-Islands-Cpp](https://github.com/Blinue/Xaml-Islands-Cpp); this project is inspired by it.

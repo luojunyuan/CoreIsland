@@ -6,7 +6,7 @@
 
   <Target Name="CoreIsland_StageMuxRuntime"
           AfterTargets="Build"
-          Condition="'$(AppxPackage)' != 'true'">
+          Condition="'$(DisableCoreIslandMuxExtract)' != 'true'">
 
     <PropertyGroup>
       <_MuxArch Condition="'$(Platform)' == 'x64'">x64</_MuxArch>
@@ -21,14 +21,14 @@
   <!-- Copy MUX DLL to PublishDir (AOT / dotnet publish) -->
   <Target Name="CoreIsland_CopyMuxToPublish"
           AfterTargets="CopyNativeBinary"
-          Condition="'$(AppxPackage)' != 'true' And Exists('$(OutputPath)Microsoft.UI.Xaml.dll')">
+          Condition="'$(DisableCoreIslandMuxExtract)' != 'true' And Exists('$(OutputPath)Microsoft.UI.Xaml.dll')">
     <Copy SourceFiles="$(OutputPath)Microsoft.UI.Xaml.dll" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
   </Target>
 
   <!-- Extract + merge PRI (runs BEFORE PRI generation) -->
   <Target Name="CoreIsland_MergeMuxPri"
           BeforeTargets="_GenerateProjectPriConfigurationFiles"
-          Condition="'$(AppxPackage)' != 'true'">
+          Condition="'$(DisableCoreIslandMuxExtract)' != 'true'">
 
     <PropertyGroup>
       <_MuxArch Condition="'$(Platform)' == 'x64'">x64</_MuxArch>

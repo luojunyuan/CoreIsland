@@ -5,8 +5,7 @@
   -->
   <Target Name="CoreIsland_PatchAppMain"
           AfterTargets="XamlMarkupCompilePass1"
-          BeforeTargets="CoreCompile"
-          Condition="'$(AppxPackage)' != 'true'">
+          BeforeTargets="CoreCompile">
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Utils\Patch-AppMain.ps1&quot; -FilePath &quot;$(IntermediateOutputPath)App.g.i.cs&quot;" />
   </Target>
 </Project>

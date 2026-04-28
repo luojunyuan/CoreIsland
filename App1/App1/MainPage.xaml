@@ -16,10 +16,11 @@
 
         <Button HorizontalAlignment="Right" Content="Click me!" />
 
-        <!--<SettingsCard
+        <SettingsCard
             xmlns="using:CommunityToolkit.WinUI.Controls"
+            VerticalAlignment="Bottom"
             Content="asdfsdf"
             Header="sdfsdf"
-            HeaderIcon="Emoji" />-->
+            HeaderIcon="Emoji" />
     </Grid>
 </Page>

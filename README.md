@@ -1,7 +1,7 @@
 ﻿# CoreIsland
-
-![NuGet Version](https://img.shields.io/nuget/v/CoreIsland)
-![NuGet Downloads](https://img.shields.io/nuget/dt/CoreIsland)
+ 
+[![NuGet Version](https://img.shields.io/nuget/v/CoreIsland)](https://www.nuget.org/packages/CoreIsland/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/CoreIsland)](https://www.nuget.org/packages/CoreIsland/#versions-body-tab)
 
 A .NET library that enables building **AOT-compiled Win32 desktop apps with WinUI 2** via XAML Islands — no UWP packaging or MSIX required.
 

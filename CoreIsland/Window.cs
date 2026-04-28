@@ -103,7 +103,7 @@ public unsafe partial class Window
         set => _xamlHost.Content = value; 
     }
 
-    public void Show()
+    public void Activate()
     {
         PInvoke.ShowWindow(_hwnd, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
         PInvoke.UpdateWindow(_hwnd);

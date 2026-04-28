@@ -29,7 +29,7 @@ namespace App1
 
             rootFrame.Navigate(typeof(MainPage), e.Arguments);
 
-            _window.Show();
+            _window.Activate();
         }
 
         /// <summary>

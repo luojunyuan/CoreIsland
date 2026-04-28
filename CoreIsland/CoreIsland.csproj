@@ -12,7 +12,6 @@
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <EnableMsixTooling>true</EnableMsixTooling>
     <NuspecFile>CoreIsland.nuspec</NuspecFile>
-    <NuspecProperties>configuration=$(Configuration)</NuspecProperties>
     <NoWarn>NU5110;NU5111</NoWarn>
   </PropertyGroup>
   <ItemGroup>

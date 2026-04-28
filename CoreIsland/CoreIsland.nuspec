@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>CoreIsland</id>
-    <version>1.0.2</version>
+    <version>1.0.0</version>
     <authors>CoreIsland</authors>
     <license type="expression">MIT</license>
     <readme>README.md</readme>
@@ -20,11 +20,12 @@
   </metadata>
   <files>
     <!-- Runtime assembly -->
-    <file src="bin\Release\net10.0-windows10.0.26100.0\win-x64\CoreIsland.dll" target="lib\net10.0-windows10.0.26100\CoreIsland.dll" />
+    <file src="bin\x64\Release\net10.0-windows10.0.26100.0\CoreIsland.dll" target="lib\net10.0-windows10.0.26100\CoreIsland.dll" />
 
     <!-- NuGet README (shown after install) -->
-    <file src="README.md" target="\" />
-
+    <file src="readme.txt" target="readme.txt" />
+    <file src="..\README.md" target="README.md" />
+	  
     <!-- Auto-import wrappers (NuGet convention: build/{id}.props + build/{id}.targets) -->
     <file src="CoreIsland.props" target="build\CoreIsland.props" />
     <file src="CoreIsland.targets" target="build\CoreIsland.targets" />

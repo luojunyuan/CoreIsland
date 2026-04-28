@@ -1,5 +1,8 @@
 ﻿# CoreIsland
 
+![NuGet Version](https://img.shields.io/nuget/v/CoreIsland)
+![NuGet Downloads](https://img.shields.io/nuget/dt/CoreIsland)
+
 A .NET library that enables building **AOT-compiled Win32 desktop apps with WinUI 2** via XAML Islands — no UWP packaging or MSIX required.
 
 It replaces UWP's `Application.Start()` / runtime marshalling with a custom `Application`, a Win32 `Window` hosting `DesktopWindowXamlSource`, source-generated COM interop, and build-time MSBuild extensions — all compatible with .NET Native AOT.

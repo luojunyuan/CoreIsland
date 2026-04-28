@@ -1,0 +1,3 @@
+﻿# CoreIsland
+
+readme for nuget

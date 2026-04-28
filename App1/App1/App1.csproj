@@ -25,9 +25,6 @@
   </ItemGroup>
 
   <!-- CoreIsland Extensions -->
-  <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.props" />
-  <Import Project="..\..\CoreIsland\CoreIsland.XbfEmbed.targets" />
-  <Import Project="..\..\CoreIsland\CoreIsland.Mux.props" />
-  <Import Project="..\..\CoreIsland\CoreIsland.Mux.targets" />
-  <Import Project="..\..\CoreIsland\CoreIsland.AppMain.targets" />
+  <Import Project="..\..\CoreIsland\CoreIsland.props" />
+  <Import Project="..\..\CoreIsland\CoreIsland.targets" />
 </Project>

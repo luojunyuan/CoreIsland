@@ -1,0 +1,5 @@
+<Project>
+  <!-- Import XbfEmbed + Mux props; consumed by the auto-import convention build/{PackageId}.props -->
+  <Import Project="$(MSBuildThisFileDirectory)CoreIsland.XbfEmbed.props" />
+  <Import Project="$(MSBuildThisFileDirectory)CoreIsland.Mux.props" />
+</Project>

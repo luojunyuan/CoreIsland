@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <!--
     CoreIsland: patch the generated App.g.i.cs to replace UWP Application.Start
     with CoreIsland's XAML Islands initialization (app.Initialize() + app.Run()).

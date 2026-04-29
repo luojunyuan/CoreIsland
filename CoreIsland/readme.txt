@@ -93,6 +93,8 @@ namespace YourApp
     <UseUwp>true</UseUwp>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Turn this to true if you want to package your app with WAP -->
+    <CoreIslandPackaging>false</CoreIslandPackaging>
   </PropertyGroup>
 
   <ItemGroup>

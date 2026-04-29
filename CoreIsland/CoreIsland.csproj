@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <UseUwp>true</UseUwp>
     <UseUwpTools>false</UseUwpTools>
-    <Platforms>x86;x64;ARM64</Platforms>
     <IsAotCompatible>true</IsAotCompatible>
     <CsWin32RunAsBuildTask>true</CsWin32RunAsBuildTask>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>

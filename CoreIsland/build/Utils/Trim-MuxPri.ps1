@@ -1,4 +1,4 @@
-<# 
+﻿<# 
     Trims the Microsoft.UI.Xaml resources.pri by removing XBF variants
     for obsolete Windows versions (compact, v1, rs2~rs5), keeping only
     19h1 and 21h1 XBF resources. Mirrors Magpie's WinUI.targets approach.
@@ -137,4 +137,4 @@ Remove-Item $configXml -Force -ErrorAction SilentlyContinue
 
 $inSize = [math]::Round((Get-Item $InputPri).Length / 1KB, 1)
 $outSize = [math]::Round((Get-Item $OutputPri).Length / 1KB, 1)
-Write-Host "Trim-MuxPri: done — ${inSize}KB → ${outSize}KB"
+Write-Host "Trim-MuxPri: done - ${inSize}KB -> ${outSize}KB"

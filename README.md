@@ -23,7 +23,8 @@ msbuild .\App1\App1\App1.csproj /t:Publish /p:PublishProfile=win-x64 /p:Platform
 - [x] reduce "Microsoft.UI.Xaml.pri" size
 - [ ] ExtendsContentIntoTitleBar
 - [x] release nuget package
-- [ ] fix when PublishAot on msix packaged
+- [ ] fix when PublishAot on msix packaged (JIT pacakged is fine)
+- [ ] Verify x:Uid x-generate working correctly
 
 ### Looking for a C++ version?
 Also check [Blinue/Xaml-Islands-Cpp](https://github.com/Blinue/Xaml-Islands-Cpp); this project is inspired by it.

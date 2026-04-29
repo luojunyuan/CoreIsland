@@ -30,3 +30,7 @@ dotnet build App1\App1\App1.csproj
 dotnet build CoreIsland.slnx
 ```
 
+## File Encoding
+
+Always create or save files with **UTF-8 BOM** encoding and **CRLF** line endings. This is required for compatibility with MSBuild / Windows tooling in this repository.
+

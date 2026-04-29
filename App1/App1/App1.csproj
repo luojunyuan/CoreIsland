@@ -25,7 +25,7 @@
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
   </ItemGroup>
 
-  <!-- CoreIsland Extensions -->
+  <!-- Not needed when consuming CoreIsland as a NuGet package -->
   <Import Project="..\..\CoreIsland\build\CoreIsland.props" />
   <Import Project="..\..\CoreIsland\build\CoreIsland.targets" />
 </Project>

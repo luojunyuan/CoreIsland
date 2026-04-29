@@ -1,6 +1,6 @@
-<Project>
+﻿<Project>
   <!-- Import XbfEmbed + Mux + AppMain targets; consumed by the auto-import convention build/{PackageId}.targets -->
-  <Import Project="$(MSBuildThisFileDirectory)CoreIsland.XbfEmbed.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)CoreIsland.Mux.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)CoreIsland.XbfEmbed.targets" Condition="'$(CoreIslandPackaging)' != 'true'" />
+  <Import Project="$(MSBuildThisFileDirectory)CoreIsland.Mux.targets" Condition="'$(CoreIslandPackaging)' != 'true'" />
   <Import Project="$(MSBuildThisFileDirectory)CoreIsland.AppMain.targets" />
 </Project>

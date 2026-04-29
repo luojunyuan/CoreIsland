@@ -41,14 +41,14 @@ public unsafe partial class Window
         {
             var cs = (CREATESTRUCTW*)lParam.Value;
             var pSelf = (nint)cs->lpCreateParams;
-            PInvoke.SetWindowLongPtr(hwnd, WINDOW_LONG_PTR_INDEX.GWL_USERDATA, pSelf);
+            PInvoke.SetWindowLongAnyCPU(hwnd, WINDOW_LONG_PTR_INDEX.GWL_USERDATA, pSelf);
 
             if (GCHandle.FromIntPtr(pSelf).Target is Window self)
                 self._hwnd = hwnd;
         }
         else
         {
-            var userData = PInvoke.GetWindowLongPtr(hwnd, WINDOW_LONG_PTR_INDEX.GWLP_USERDATA);
+            var userData = PInvoke.GetWindowLongAnyCPU(hwnd, WINDOW_LONG_PTR_INDEX.GWLP_USERDATA);
             if (userData != 0 && GCHandle.FromIntPtr(userData).Target is Window self)
                 return self.WndProc(msg, wParam, lParam);
         }

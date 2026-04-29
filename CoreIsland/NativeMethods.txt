@@ -13,10 +13,9 @@ ShowWindow
 UpdateWindow
 
 // ---- Window Procedure ----
+WINDOW_LONG_PTR_INDEX
 WM_*
 CREATESTRUCTW
-SetWindowLongPtr
-GetWindowLongPtr
 DefWindowProc
 PostQuitMessage
 SIZE_MINIMIZED

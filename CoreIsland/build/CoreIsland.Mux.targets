@@ -10,6 +10,7 @@
     <PropertyGroup>
       <_MuxArch Condition="'$(Platform)' == 'x64'">x64</_MuxArch>
       <_MuxArch Condition="'$(Platform)' == 'ARM64'">arm64</_MuxArch>
+      <_MuxArch Condition="'$(Platform)' == 'x86'">x86</_MuxArch>
     </PropertyGroup>
 
     <!-- Copy native DLL to output (projection.dll exists = package referenced) -->
@@ -30,6 +31,7 @@
     <PropertyGroup>
       <_MuxArch Condition="'$(Platform)' == 'x64'">x64</_MuxArch>
       <_MuxArch Condition="'$(Platform)' == 'ARM64'">arm64</_MuxArch>
+      <_MuxArch Condition="'$(Platform)' == 'x86'">x86</_MuxArch>
     </PropertyGroup>
 
     <!-- Only proceed if Microsoft.UI.Xaml.Projection was resolved as a reference -->

@@ -14,7 +14,7 @@
 
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <CoreIslandPackaging>true</CoreIslandPackaging>
+    <CoreIslandPackaging>false</CoreIslandPackaging>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,6 @@
+﻿<island:Application
+    x:Class="HostWindowTest.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:island="using:CoreIsland"
+    xmlns:local="using:HostWindowTest" />

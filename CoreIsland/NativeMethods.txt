@@ -22,3 +22,15 @@ SIZE_MINIMIZED
 GetClientRect
 SetWindowPos
 SendMessage
+
+// ---- HostedIsland Cross-process subclass ----
+SetParent
+CallWindowProc
+SetWinEventHook
+UnhookWinEvent
+GetWindowThreadProcessId
+WINEVENT_OUTOFCONTEXT
+WINEVENT_SKIPOWNPROCESS
+EVENT_OBJECT_LOCATIONCHANGE
+EVENT_OBJECT_DESTROY
+WINEVENTPROC

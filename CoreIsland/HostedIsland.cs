@@ -14,7 +14,9 @@ namespace CoreIsland;
 
 public unsafe partial class HostedIsland
 {
-    private const string ClassName = "CoreIsland_Wnd";
+    private const string ClassName = "CoreIsland_HostedWnd";
+    private const uint WM_CLEANUP = PInvoke.WM_USER + 1;
+    private const uint TIMER_ID = 1;
     private static readonly FreeLibrarySafeHandle s_hModule = PInvoke.GetModuleHandle();
     private static readonly WNDPROC s_wndProc = (delegate* unmanaged[Stdcall]<HWND, uint, WPARAM, LPARAM, LRESULT>)&StaticWndProc;
 
@@ -38,6 +40,37 @@ public unsafe partial class HostedIsland
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static LRESULT StaticWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
     {
+        if (msg == PInvoke.WM_NCCREATE)
+        {
+            var cs = (CREATESTRUCTW*)lParam.Value;
+            var pSelf = (nint)cs->lpCreateParams;
+            PInvoke.SetWindowLongAnyCPU(hwnd, WINDOW_LONG_PTR_INDEX.GWL_USERDATA, pSelf);
+        }
+        else
+        {
+            var userData = PInvoke.GetWindowLongAnyCPU(hwnd, WINDOW_LONG_PTR_INDEX.GWLP_USERDATA);
+            if (userData != 0 && GCHandle.FromIntPtr(userData).Target is HostedIsland self)
+            {
+                if (msg == WM_CLEANUP)
+                {
+                    Console.WriteLine("CLEAN");
+                    self._xamlHost?.Dispose();
+                    PInvoke.DestroyWindow(hwnd);
+                    return default;
+                }
+
+                if (msg == PInvoke.WM_DESTROY)
+                {
+                    Console.WriteLine("DESTORY");
+                    if (self._selfHandle.IsAllocated)
+                        self._selfHandle.Free();
+                    s_current = null;
+                    PInvoke.PostQuitMessage(0);
+                    return default;
+                }
+            }
+        }
+
         return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
     }
 }
@@ -48,7 +81,9 @@ public unsafe partial class HostedIsland
     private readonly GCHandle _selfHandle;
     private readonly HWND _xamlHwnd;
     private readonly HWND _hostHwnd;
+    private readonly HWND _fakeHwnd;
     private readonly UnhookWinEventSafeHandle _winEventHook;
+    private bool _detached;
 
     private static HostedIsland? s_current;
 
@@ -57,35 +92,33 @@ public unsafe partial class HostedIsland
         _hostHwnd = (HWND)hostHwnd;
 
         _selfHandle = GCHandle.Alloc(this);
-        var fakeHwnd = PInvoke.CreateWindowEx(
-            dwExStyle: WINDOW_EX_STYLE.WS_EX_NOREDIRECTIONBITMAP,
+        _fakeHwnd = PInvoke.CreateWindowEx(
+            dwExStyle: WINDOW_EX_STYLE.WS_EX_NOREDIRECTIONBITMAP | WINDOW_EX_STYLE.WS_EX_TOOLWINDOW,
             lpClassName: ClassName,
-            lpWindowName: "FakeHostIsland",
-            dwStyle: WINDOW_STYLE.WS_OVERLAPPEDWINDOW,
-            X: PInvoke.CW_USEDEFAULT,
-            Y: PInvoke.CW_USEDEFAULT,
-            nWidth: PInvoke.CW_USEDEFAULT,
-            nHeight: PInvoke.CW_USEDEFAULT,
+            lpWindowName: null,
+            dwStyle: WINDOW_STYLE.WS_POPUP,
+            X: 0,
+            Y: 0,
+            nWidth: 1,
+            nHeight: 1,
             hWndParent: default,
             hMenu: default,
             hInstance: s_hModule,
             lpParam: (void*)GCHandle.ToIntPtr(_selfHandle));
 
-        if (fakeHwnd.IsNull)
+        if (_fakeHwnd.IsNull)
             throw new Win32Exception();
 
         var nativeSource = _xamlHost.As<IDesktopWindowXamlSourceNative2>();
-        nativeSource.AttachToWindow(fakeHwnd);
+        nativeSource.AttachToWindow(_fakeHwnd);
         nativeSource.GetWindowHandle(out _xamlHwnd);
 
-        // Reparent both XAML island HWND and CoreWindow HWND as children of the host
         PInvoke.SetParent(_xamlHwnd, _hostHwnd);
-        PInvoke.SetParent(Application.CoreHwnd, _hostHwnd);
 
         s_current = this;
         var tid = PInvoke.GetWindowThreadProcessId(_hostHwnd, out var pid);
         _winEventHook = PInvoke.SetWinEventHook(
-            PInvoke.EVENT_OBJECT_DESTROY,
+            PInvoke.EVENT_OBJECT_HIDE,
             PInvoke.EVENT_OBJECT_LOCATIONCHANGE,
             default,
             (delegate* unmanaged[Stdcall]<HWINEVENTHOOK, uint, HWND, int, int, uint, uint, void>)&WinEventProc,
@@ -108,7 +141,19 @@ public unsafe partial class HostedIsland
 
     private IFrameworkApplicationPrivate FrameworkAppPrivate { get; } = Windows.UI.Xaml.Application.Current.As<IFrameworkApplicationPrivate>();
 
-    /// <summary>WinEvent hook — invoked by the message pump when the host window moves, resizes, or is destroyed.</summary>
+    private void Detach()
+    {
+        if (_detached)
+            return;
+        _detached = true;
+
+        PInvoke.SetParent(_xamlHwnd, _fakeHwnd);
+
+        try { _winEventHook.Close(); } catch (Exception ex) { Debug.WriteLine(ex.Message); }
+
+        PInvoke.PostMessage(_fakeHwnd, WM_CLEANUP, default, default);
+    }
+
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static void WinEventProc(HWINEVENTHOOK hWinEventHook, uint eventType, HWND hwnd,
         int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
@@ -116,15 +161,10 @@ public unsafe partial class HostedIsland
         if (s_current is not { } self || hwnd != self._hostHwnd || idObject != 0)
             return;
 
-        if (eventType == PInvoke.EVENT_OBJECT_DESTROY)
+        if (eventType is PInvoke.EVENT_OBJECT_HIDE or PInvoke.EVENT_OBJECT_DESTROY)
         {
-            Debug.WriteLine("EVENT_OBJECT_DESTROY");
-            self._winEventHook.Close();
-            self._xamlHost?.Dispose();
-            if (self._selfHandle.IsAllocated)
-                self._selfHandle.Free();
-            s_current = null;
-            PInvoke.PostQuitMessage(0);
+            Console.WriteLine(eventType.ToString());
+            self.Detach();
             return;
         }
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Hosting;
 using Windows.Win32;
@@ -11,7 +11,6 @@ using Windows.Win32.UI.WindowsAndMessaging;
 using WinRT;
 
 namespace CoreIsland;
-
 
 public unsafe partial class HostedIsland
 {
@@ -47,7 +46,6 @@ public unsafe partial class HostedIsland
 {
     private readonly DesktopWindowXamlSource _xamlHost = new();
     private readonly GCHandle _selfHandle;
-    private readonly HWND _coreHwnd;
     private readonly HWND _xamlHwnd;
     private readonly HWND _hostHwnd;
     private readonly UnhookWinEventSafeHandle _winEventHook;
@@ -57,9 +55,6 @@ public unsafe partial class HostedIsland
     public HostedIsland(nint hostHwnd)
     {
         _hostHwnd = (HWND)hostHwnd;
-
-        CoreWindow.GetForCurrentThread()
-            .HideWindowInWin10(out _coreHwnd);
 
         _selfHandle = GCHandle.Alloc(this);
         var fakeHwnd = PInvoke.CreateWindowEx(
@@ -84,32 +79,25 @@ public unsafe partial class HostedIsland
         nativeSource.GetWindowHandle(out _xamlHwnd);
 
         // Reparent both XAML island HWND and CoreWindow HWND as children of the host
-        SetChildWindow(_xamlHwnd, _hostHwnd);
-        SetChildWindow(_coreHwnd, _hostHwnd);
+        PInvoke.SetParent(_xamlHwnd, _hostHwnd);
+        PInvoke.SetParent(Application.CoreHwnd, _hostHwnd);
 
-        // Install a WinEvent hook to watch the host for resize/destroy (cross-process safe).
-        // idProcess=0 & idThread=0 → monitor all processes/threads; filter by HWND in callback.
         s_current = this;
+        var tid = PInvoke.GetWindowThreadProcessId(_hostHwnd, out var pid);
         _winEventHook = PInvoke.SetWinEventHook(
             PInvoke.EVENT_OBJECT_DESTROY,
             PInvoke.EVENT_OBJECT_LOCATIONCHANGE,
             default,
             (delegate* unmanaged[Stdcall]<HWINEVENTHOOK, uint, HWND, int, int, uint, uint, void>)&WinEventProc,
-            idProcess: 0,
-            idThread: 0,
-            PInvoke.WINEVENT_OUTOFCONTEXT);
+            idProcess: pid,
+            idThread: tid,
+            PInvoke.WINEVENT_OUTOFCONTEXT | PInvoke.WINEVENT_SKIPOWNPROCESS);
 
         EnableResizeLayoutSynchronization(_hostHwnd, true);
-    }
 
-    /// <summary>Remove WS_POPUP, add WS_CHILD, and SetParent to the host.</summary>
-    private static void SetChildWindow(HWND hwnd, HWND parent)
-    {
-        var style = PInvoke.GetWindowLongAnyCPU(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
-        style &= ~(nint)WINDOW_STYLE.WS_POPUP;
-        style |= (nint)WINDOW_STYLE.WS_CHILD;
-        PInvoke.SetWindowLongAnyCPU(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, style);
-        PInvoke.SetParent(hwnd, parent);
+        PInvoke.GetClientRect(_hostHwnd, out RECT cr);
+        PInvoke.SetWindowPos(_xamlHwnd, default, cr.X, cr.Y, cr.Width, cr.Height,
+            SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW);
     }
 
     public UIElement Content
@@ -130,6 +118,7 @@ public unsafe partial class HostedIsland
 
         if (eventType == PInvoke.EVENT_OBJECT_DESTROY)
         {
+            Debug.WriteLine("EVENT_OBJECT_DESTROY");
             self._winEventHook.Close();
             self._xamlHost?.Dispose();
             if (self._selfHandle.IsAllocated)
@@ -145,7 +134,7 @@ public unsafe partial class HostedIsland
             SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW);
 
         nint lParam = (cr.Height << 16) | (cr.Width & 0xFFFF);
-        PInvoke.SendMessage(self._coreHwnd, PInvoke.WM_SIZE, (WPARAM)0 /* SIZE_RESTORED */, (LPARAM)lParam);
+        PInvoke.SendMessage(Application.CoreHwnd, PInvoke.WM_SIZE, (WPARAM)0 /* SIZE_RESTORED */, (LPARAM)lParam);
 
         self.FrameworkAppPrivate.SetSynchronizationWindow(self._hostHwnd);
     }

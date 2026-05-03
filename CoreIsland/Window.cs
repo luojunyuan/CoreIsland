@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Hosting;
 using Windows.Win32;
@@ -63,15 +62,13 @@ public unsafe partial class Window
 
     private readonly DesktopWindowXamlSource _xamlHost = new();
     private readonly GCHandle _selfHandle;
-    private readonly HWND _coreHwnd;
     private readonly HWND _xamlHwnd;
     private HWND _hwnd;
 
+    internal HWND Hwnd => _hwnd;
+
     public Window()
     {
-        CoreWindow.GetForCurrentThread()
-            .HideWindowInWin10(out _coreHwnd);
-
         _selfHandle = GCHandle.Alloc(this);
         var hwnd = PInvoke.CreateWindowEx(
             dwExStyle: WINDOW_EX_STYLE.WS_EX_NOREDIRECTIONBITMAP,
@@ -90,6 +87,8 @@ public unsafe partial class Window
         if (hwnd.IsNull)
             throw new Win32Exception();
 
+        Application.Current.RegisterWindow(this);
+
         var nativeSource = _xamlHost.As<IDesktopWindowXamlSourceNative2>();
         nativeSource.AttachToWindow(_hwnd);
         nativeSource.GetWindowHandle(out _xamlHwnd);
@@ -97,10 +96,10 @@ public unsafe partial class Window
         EnableResizeLayoutSynchronization(_hwnd, true);
     }
 
-    public UIElement Content 
-    { 
-        get => _xamlHost.Content; 
-        set => _xamlHost.Content = value; 
+    public UIElement Content
+    {
+        get => _xamlHost.Content;
+        set => _xamlHost.Content = value;
     }
 
     public void Activate()
@@ -115,12 +114,16 @@ public unsafe partial class Window
     {
         switch (msg)
         {
+            case PInvoke.WM_ACTIVATE when wParam.Value != 0:
+                Application.Current.OnWindowActivated(this);
+                return default;
+
             case PInvoke.WM_SIZE when wParam.Value != PInvoke.SIZE_MINIMIZED:
                 PInvoke.GetClientRect(_hwnd, out RECT cr);
                 PInvoke.SetWindowPos(_xamlHwnd, default, cr.X, cr.Y, cr.Width, cr.Height,
                     SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW);
 
-                PInvoke.SendMessage(_coreHwnd, PInvoke.WM_SIZE, wParam, lParam);
+                PInvoke.SendMessage(Application.CoreHwnd, PInvoke.WM_SIZE, wParam, lParam);
 
                 FrameworkAppPrivate.SetSynchronizationWindow(_hwnd);
                 return default;
@@ -129,7 +132,7 @@ public unsafe partial class Window
                 _xamlHost?.Dispose();
                 if (_selfHandle.IsAllocated)
                     _selfHandle.Free();
-                PInvoke.PostQuitMessage(0);
+                Application.Current.OnWindowClosing(this);
                 return default;
         }
 

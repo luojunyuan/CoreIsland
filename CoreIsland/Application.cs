@@ -1,5 +1,7 @@
-﻿using Windows.UI.Xaml.Hosting;
+﻿using Windows.ApplicationModel.Activation;
+using Windows.UI.Xaml.Hosting;
 using Windows.Win32;
+using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 using WinRT;
 
@@ -7,15 +9,29 @@ namespace CoreIsland;
 
 public partial class Application : Windows.UI.Xaml.Application
 {
-    private static WindowsXamlManager? s_xamlManager;
+    internal static HWND CoreHwnd;
+    internal new static Application Current { get; private set; } = null!;
 
-    public void Initialize()
+    private readonly WindowsXamlManager _xamlManager;
+
+    protected Application()
     {
-        s_xamlManager = WindowsXamlManager.InitializeForCurrentThread();
+        Current = this;
 
-        var win = Windows.UI.Xaml.Window.Current;
-        win.As<IXamlSourceTransparency>().IsBackgroundTransparent = true;
+        _xamlManager = WindowsXamlManager.InitializeForCurrentThread();
     }
+
+    protected sealed override void OnLaunched(LaunchActivatedEventArgs e)
+    {
+        global::Windows.UI.Core.CoreWindow.GetForCurrentThread().HideWindowInWin10(out CoreHwnd);
+
+        var xamlWindowBoundToCoreWindow = global::Windows.UI.Xaml.Window.Current;
+        xamlWindowBoundToCoreWindow.As<IXamlSourceTransparency>().IsBackgroundTransparent = true;
+
+        OnIslandLaunched(e);
+    }
+
+    protected virtual void OnIslandLaunched(LaunchActivatedEventArgs e) { }
 
     public int Run()
     {
@@ -27,5 +43,11 @@ public partial class Application : Windows.UI.Xaml.Application
         }
 
         return (int)msg.wParam.Value;
+    }
+
+    public int Run(Window window)
+    {
+        window.Activate();
+        return Run();
     }
 }

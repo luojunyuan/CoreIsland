@@ -1,4 +1,4 @@
-<# 
+﻿<# 
     CoreIsland Patch: replaces auto-generated UWP Application.Start in
     App.g.i.cs with CoreIsland's XAML Islands initialization.
 #>
@@ -30,7 +30,6 @@ $replacement = @"
         static int Main(string[] args)
         {
             var app = new App();
-            app.Initialize();
             return app.Run();
         }
     }

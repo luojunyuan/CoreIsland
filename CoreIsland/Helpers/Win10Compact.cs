@@ -6,6 +6,7 @@ using WinRT;
 
 internal static class Win10Compact
 {
+    // REMARK: After InitializeForCurrentThread CoreWindow show in the taskbar and always has a size of 1x1
     public static CoreWindow HideWindowInWin10(this CoreWindow coreWindow, out HWND hwnd)
     {
         coreWindow.As<ICoreWindowInterop>().GetWindowHandle(out hwnd);

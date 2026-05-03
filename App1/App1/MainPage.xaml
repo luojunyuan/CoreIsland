@@ -14,7 +14,10 @@
             VerticalAlignment="Bottom"
             Text="XAML islands loaded!" />
 
-        <Button HorizontalAlignment="Right" Content="Click me!" />
+        <Button
+            HorizontalAlignment="Right"
+            Click="Button_Click"
+            Content="Click me!" />
 
         <SettingsCard
             xmlns="using:CommunityToolkit.WinUI.Controls"

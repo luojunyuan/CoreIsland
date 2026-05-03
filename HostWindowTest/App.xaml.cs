@@ -14,10 +14,4 @@ public sealed partial class App : CoreIsland.Application
     {
         InitializeComponent();
     }
-
-    /// <inheritdoc/>
-    protected override async void OnLaunched(LaunchActivatedEventArgs e)
-    {
-        Console.WriteLine("OnLaunched");
-    }
 }

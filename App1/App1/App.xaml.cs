@@ -17,19 +17,20 @@ namespace App1
         }
 
         /// <inheritdoc/>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnIslandLaunched(LaunchActivatedEventArgs e)
         {
-            var rootFrame = new Frame();
-            rootFrame.NavigationFailed += OnNavigationFailed;
+            ;
+            //var rootFrame = new Frame();
+            //rootFrame.NavigationFailed += OnNavigationFailed;
 
-            _window = new CoreIsland.Window()
-            {
-                Content = rootFrame
-            };
+            //_window = new CoreIsland.Window()
+            //{
+            //    Content = rootFrame
+            //};
 
-            rootFrame.Navigate(typeof(MainPage), e.Arguments);
+            //rootFrame.Navigate(typeof(MainPage), e.Arguments);
 
-            _window.Activate();
+            //_window.Activate();
         }
 
         /// <summary>

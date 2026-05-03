@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml.Hosting;
 using Windows.Win32;
 using Windows.Win32.UI.WindowsAndMessaging;
+using WinRT;
 
 namespace CoreIsland;
 
@@ -11,6 +12,9 @@ public partial class Application : Windows.UI.Xaml.Application
     public void Initialize()
     {
         s_xamlManager = WindowsXamlManager.InitializeForCurrentThread();
+
+        var win = Windows.UI.Xaml.Window.Current;
+        win.As<IXamlSourceTransparency>().IsBackgroundTransparent = true;
     }
 
     public int Run()

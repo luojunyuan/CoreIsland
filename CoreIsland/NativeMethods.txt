@@ -3,6 +3,9 @@ GetMessage
 TranslateMessage
 DispatchMessage
 
+// ---- Application.Windows ----
+SetParent
+
 // ---- Window ----
 GetModuleHandle
 RegisterClassEx
@@ -22,14 +25,3 @@ SIZE_MINIMIZED
 GetClientRect
 SetWindowPos
 SendMessage
-
-// ---- HostedIsland Cross-process subclass ----
-SetParent
-GetWindowThreadProcessId
-SetWinEventHook
-WINEVENT_OUTOFCONTEXT
-WINEVENT_SKIPOWNPROCESS
-WINEVENTPROC
-EVENT_OBJECT_*
-PostMessage
-DestroyWindow

@@ -13,11 +13,6 @@
       <Platform Solution="*|x64" Project="x64" />
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="HostWindowTest/HostWindowTest.csproj" Id="bab6dfad-f74f-4d8b-a3fc-b53501b31f5a">
-      <Platform Solution="*|ARM64" Project="arm64" />
-      <Platform Solution="*|x64" Project="x64" />
-      <Platform Solution="*|x86" Project="x86" />
-    </Project>
   </Folder>
   <Project Path="CoreIsland/CoreIsland.csproj" />
 </Solution>

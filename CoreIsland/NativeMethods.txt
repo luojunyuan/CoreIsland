@@ -25,13 +25,11 @@ SendMessage
 
 // ---- HostedIsland Cross-process subclass ----
 SetParent
-CallWindowProc
-SetWinEventHook
-UnhookWinEvent
 GetWindowThreadProcessId
+SetWinEventHook
 WINEVENT_OUTOFCONTEXT
 WINEVENT_SKIPOWNPROCESS
-EVENT_OBJECT_*
 WINEVENTPROC
+EVENT_OBJECT_*
 PostMessage
 DestroyWindow

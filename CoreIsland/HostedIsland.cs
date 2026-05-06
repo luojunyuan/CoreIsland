@@ -113,6 +113,7 @@ public unsafe partial class HostedIsland
         nativeSource.AttachToWindow(_fakeHwnd);
         nativeSource.GetWindowHandle(out _xamlHwnd);
 
+        PInvoke.SetParent(Application.CoreHwnd, _hostHwnd);
         PInvoke.SetParent(_xamlHwnd, _hostHwnd);
 
         s_current = this;
@@ -147,7 +148,7 @@ public unsafe partial class HostedIsland
             return;
         _detached = true;
 
-        PInvoke.SetParent(_xamlHwnd, _fakeHwnd);
+        //PInvoke.SetParent(_xamlHwnd, _fakeHwnd);
 
         try { _winEventHook.Close(); } catch (Exception ex) { Debug.WriteLine(ex.Message); }
 

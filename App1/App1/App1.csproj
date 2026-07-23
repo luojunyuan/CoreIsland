@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\WinUIIslands\WinUIIslands.csproj" />
-    <PackageReference Include="ModernUwp.CLI.BuildTools" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="ModernUwp.CLI.BuildTools" Version="1.0.4" PrivateAssets="all" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" ExcludeAssets="All" />
